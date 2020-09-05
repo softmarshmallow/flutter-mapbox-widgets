@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -56,22 +58,35 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [buildMap(), buildMarkers()],
+      children: [
+        buildMap(),
+        if (point != null)
+          Positioned(
+            child: Marker(),
+            top: point.y,
+            left: point.x,
+          ),
+//        buildMarkers()
+      ],
     );
   }
 
   Widget buildMarkers() {
-    if (visibleRegion != null) {
-      print(visibleRegion.northeast);
-      print(visibleRegion.southwest);
-    }
+//    print(point);
     return Stack(
-      children: [Marker()],
+      children: [
+        Positioned(
+          child: Marker(),
+          top: point.y,
+          left: point.x,
+        ),
+      ],
     );
   }
 
   LatLngBounds visibleRegion;
   CameraPosition cameraPosition;
+  Point<double> point; //  = Point<double>(0, 0);
 
   Widget buildMap() {
     return MapboxMap(
@@ -86,13 +101,15 @@ class _MainScreenState extends State<MainScreen> {
 //          print("cameraPosition.target : ${cameraPosition.target}");
 //          print("cameraPosition.zoom : ${cameraPosition.zoom}");
           controller.toScreenLocation(LatLng(0, 0)).then((value) {
-            print("screen pint: $value");
+            print("screen point: $value");
+            point = value;
           });
           controller.getVisibleRegion().then((value) {
 //            setState(() {
             visibleRegion = value;
 //            });
           });
+          setState(() {});
           print("updated");
         });
       },
