@@ -1,4 +1,4 @@
-# flutter_mapbox_widgets
+# mapbox widgets  [![](https://img.shields.io/badge/pub-latest-brightgreen)](https://pub.dev/packages/mapbox_widgets)
 
 An animatable marker widgets for flutter_mapbox
 

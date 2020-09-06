@@ -1,4 +1,4 @@
-library flutter_mapbox_widgets;
+library mapbox_widgets;
 
 /// A Calculator.
 class Calculator {

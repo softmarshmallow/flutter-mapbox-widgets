@@ -1,8 +1,7 @@
-name: flutter_mapbox_widgets
+name: mapbox_widgets
 description: An animatable marker widgets for flutter_mapbox
 version: 0.0.1
-author:
-homepage:
+homepage: https://github.com/softmarshmallow/flutter-mapbox-widgets
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

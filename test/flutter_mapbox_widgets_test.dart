@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_mapbox_widgets/flutter_mapbox_widgets.dart';
+import 'package:flutter_mapbox_widgets/mapbox_widgets.dart';
 
 void main() {
   test('adds one to input values', () {

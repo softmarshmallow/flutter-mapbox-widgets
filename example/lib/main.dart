@@ -60,62 +60,31 @@ class _MainScreenState extends State<MainScreen> {
     return Stack(
       children: [
         buildMap(),
-        if (point != null)
-          Positioned(
-            child: Marker(),
-            top: point.y,
-            left: point.x,
-          ),
-//        buildMarkers()
+        if (controller != null)
+          MarkerLayer(
+            controller: controller,
+          )
       ],
     );
   }
 
-  Widget buildMarkers() {
-//    print(point);
-    return Stack(
-      children: [
-        Positioned(
-          child: Marker(),
-          top: point.y,
-          left: point.x,
-        ),
-      ],
-    );
-  }
+  onMapCreated(MapboxMapController controller) {
+    this.controller = controller;
+    controller.addListener(() {
+      print("updated");
+    });
 
-  LatLngBounds visibleRegion;
-  CameraPosition cameraPosition;
-  Point<double> point; //  = Point<double>(0, 0);
+    setState(() {});
+  }
 
   Widget buildMap() {
     return MapboxMap(
-      onMapCreated: (c) {
-        this.controller = c;
-//        CameraUpdate
-        controller.addListener(() {
-//          controller.
-//          cameraPosition = controller.cameraPosition;
-//          print("cameraPosition.bearing : ${cameraPosition.bearing}");
-//          print("cameraPosition.tilt : ${cameraPosition.tilt}");
-//          print("cameraPosition.target : ${cameraPosition.target}");
-//          print("cameraPosition.zoom : ${cameraPosition.zoom}");
-          controller.toScreenLocation(LatLng(0, 0)).then((value) {
-            print("screen point: $value");
-            point = value;
-          });
-          controller.getVisibleRegion().then((value) {
-//            setState(() {
-            visibleRegion = value;
-//            });
-          });
-          setState(() {});
-          print("updated");
-        });
+      onMapCreated: onMapCreated,
+      onCameraIdle: (){
+        print("idle");
       },
-      onMapIdle: () {
-        print("on map idle");
-//        controller.buildView(creationParams, onPlatformViewCreated, gestureRecognizers)
+      onMapIdle: (){
+        print("map idle");
       },
       accessToken:
           "pk.eyJ1Ijoic29mdG1hcnNobWFsbG93IiwiYSI6ImNqN2xnOHR1NDJvczEyd2t5ZmljYXZ0NHIifQ.uUIoAP8Ip49wxqPVKLH8_g",
@@ -131,6 +100,64 @@ class Marker extends StatelessWidget {
       width: 50,
       height: 50,
       color: Colors.black,
+    );
+  }
+}
+
+class MarkerLayer extends StatefulWidget {
+  final MapboxMapController controller;
+
+  const MarkerLayer({Key key, @required this.controller}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _MarkerLayerState();
+}
+
+class _MarkerLayerState extends State<MarkerLayer> {
+  MapboxMapController get controller {
+    return widget.controller;
+  }
+
+  LatLngBounds visibleRegion;
+  CameraPosition cameraPosition;
+  Point<double> point; //  = Point<double>(0, 0);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() {
+      print("updated");
+      //          controller.
+//          cameraPosition = controller.cameraPosition;
+//          print("cameraPosition.bearing : ${cameraPosition.bearing}");
+//          print("cameraPosition.tilt : ${cameraPosition.tilt}");
+//          print("cameraPosition.target : ${cameraPosition.target}");
+//          print("cameraPosition.zoom : ${cameraPosition.zoom}");
+      controller.toScreenLocation(LatLng(0, 0)).then((value) {
+        print("screen point: $value");
+        setState(() {
+          point = value;
+        });
+      });
+      controller.getVisibleRegion().then((value) {
+//            setState(() {
+        visibleRegion = value;
+//            });
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        if (point != null)
+          Positioned(
+            child: Marker(),
+            top: point.y,
+            left: point.x,
+          ),
+      ],
     );
   }
 }
