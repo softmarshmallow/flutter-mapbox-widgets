@@ -80,10 +80,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget buildMap() {
     return MapboxMap(
       onMapCreated: onMapCreated,
-      onCameraIdle: (){
+      onCameraIdle: () {
         print("idle");
       },
-      onMapIdle: (){
+      onMapIdle: () {
         print("map idle");
       },
       accessToken:
@@ -121,30 +121,50 @@ class _MarkerLayerState extends State<MarkerLayer> {
   LatLngBounds visibleRegion;
   CameraPosition cameraPosition;
   Point<double> point; //  = Point<double>(0, 0);
+  Point<double> point2; //  = Point<double>(0, 0);
 
   @override
   void initState() {
     super.initState();
     widget.controller.addListener(() {
       print("updated");
+
+      if (controller.isCameraMoving) {
+        startUpdate();
+      } else {
+        stopUpdate();
+      }
+
       //          controller.
 //          cameraPosition = controller.cameraPosition;
 //          print("cameraPosition.bearing : ${cameraPosition.bearing}");
 //          print("cameraPosition.tilt : ${cameraPosition.tilt}");
 //          print("cameraPosition.target : ${cameraPosition.target}");
 //          print("cameraPosition.zoom : ${cameraPosition.zoom}");
-      controller.toScreenLocation(LatLng(0, 0)).then((value) {
-        print("screen point: $value");
-        setState(() {
-          point = value;
-        });
-      });
-      controller.getVisibleRegion().then((value) {
-//            setState(() {
-        visibleRegion = value;
-//            });
-      });
     });
+  }
+
+  bool isUpdating;
+
+  startUpdate() async {
+    if (isUpdating) {
+      return;
+    }
+    isUpdating = true;
+    while (isUpdating) {
+      print("point!!");
+      final newp = await controller.toScreenLocation(LatLng(0, 0));
+      final newp2 = await controller.toScreenLocation(LatLng(0, 80));
+
+      setState(() {
+        point = newp;
+        point2 = newp2;
+      });
+    }
+  }
+
+  stopUpdate() {
+    isUpdating = false;
   }
 
   @override
@@ -156,6 +176,12 @@ class _MarkerLayerState extends State<MarkerLayer> {
             child: Marker(),
             top: point.y,
             left: point.x,
+          ),
+        if (point2 != null)
+          Positioned(
+            child: Marker(),
+            top: point2.y,
+            left: point2.x,
           ),
       ],
     );
