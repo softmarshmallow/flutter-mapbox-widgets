@@ -146,6 +146,8 @@ class _MarkerLayerState extends State<MarkerLayer> {
 
   bool isUpdating;
 
+  var a = 0.0;
+
   startUpdate() async {
     if (isUpdating) {
       return;
@@ -153,12 +155,13 @@ class _MarkerLayerState extends State<MarkerLayer> {
     isUpdating = true;
     while (isUpdating) {
       print("point!!");
-      final newp = await controller.toScreenLocation(LatLng(0, 0));
-      final newp2 = await controller.toScreenLocation(LatLng(0, 80));
-
+//      final newp = await controller.toScreenLocation(LatLng(0, 0));
+//      final newp2 = await controller.toScreenLocation(LatLng(0, 80));
+      await Future.delayed(Duration(microseconds: 1000));
       setState(() {
-        point = newp;
-        point2 = newp2;
+        a += 0.01;
+        point = Point<double>(a, a);
+//        point2 = newp2;
       });
     }
   }
