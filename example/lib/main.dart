@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/example.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -78,6 +79,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget buildMap() {
+    return MapboxMapWidget(
+      initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
+    );
     return MapboxMap(
       onMapCreated: onMapCreated,
       onCameraIdle: () {

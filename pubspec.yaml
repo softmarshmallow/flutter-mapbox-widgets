@@ -10,7 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mapbox_gl: ^0.8.0
+  mapbox_gl:
+    git:
+      url: https://github.com/tobrun/flutter-mapbox-gl
+
 
 dev_dependencies:
   flutter_test:
